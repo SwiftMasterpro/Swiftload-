@@ -1,0 +1,17 @@
+# Dependencies and build artifacts
+**/node_modules/
+**/.next/
+**/.turbo/
+**/dist/
+**/.vercel/
+
+# Local environment files
+**/.env.local
+**/.env.*.local
+
+# Logs and macOS artifacts
+**/*.log
+**/.DS_Store
+
+# Legacy archive bundles
+*.zip
