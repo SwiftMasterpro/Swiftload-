@@ -8,7 +8,11 @@ export async function GET() {
   let db = 'ok'
   try {
     const supabase = createAdminClient()
-    await supabase.from('profiles').select('id', { count: 'exact', head: true })
+    if (!supabase) {
+      db = 'degraded'
+    } else {
+      await supabase.from('profiles').select('id', { count: 'exact', head: true })
+    }
   } catch {
     db = 'error'
   }

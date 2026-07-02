@@ -135,6 +135,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unknown form_key' }, { status: 400 })
 
     const supabase = createAdminClient()
+    if (!supabase) {
+      return NextResponse.json({ error: 'Supabase is not configured yet.' }, { status: 503 })
+    }
 
     // ── Map answers to DB fields ──────────────────────────────────────────────
     const mapped = mapAnswers(form_key, answers)

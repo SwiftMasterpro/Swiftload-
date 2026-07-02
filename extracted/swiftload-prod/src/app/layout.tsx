@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   twitter: { card:'summary_large_image', creator:'@swiftloadbw' },
   manifest: '/manifest.json',
-  icons: { icon:[{url:'/favicon.ico'},{url:'/icon-192.png',sizes:'192x192',type:'image/png'}], apple:[{url:'/apple-icon.png'}] },
+  icons: {},
   robots: { index:true, follow:true },
   alternates: { canonical:'https://swiftload.co.bw' },
 }

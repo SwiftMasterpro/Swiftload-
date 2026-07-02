@@ -30,6 +30,10 @@ export async function POST(request: Request) {
     }
 
     const supabase = createAdminClient()
+    if (!supabase) {
+      return NextResponse.json({ error: 'Contact submissions are temporarily unavailable. Please email Prontoswift@proton.me directly.' }, { status: 503 })
+    }
+
     const { error } = await supabase.from('contact_submissions').insert({
       name,
       email,

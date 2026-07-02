@@ -12,29 +12,40 @@ const ROLE_ROUTES: Record<string, string[]> = {
 }
 
 export async function middleware(req: NextRequest) {
-  const res      = NextResponse.next({ request: { headers: req.headers } })
-  const supabase = createMiddlewareClient({ req, res })
-  const { data: { session } } = await supabase.auth.getSession()
+  const res = NextResponse.next({ request: { headers: req.headers } })
   const path = req.nextUrl.pathname
+  const hasSupabaseConfig = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
-  // Redirect logged-in users away from auth pages
-  if (session && AUTH_ROUTES.some(r => path.startsWith(r))) {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
+  if (!hasSupabaseConfig) {
+    return res
   }
 
-  // Require auth for protected routes
-  if (!session && PROTECTED_ROUTES.some(r => path.startsWith(r))) {
-    const loginUrl = new URL('/auth/login', req.url)
-    loginUrl.searchParams.set('next', path)
-    return NextResponse.redirect(loginUrl)
-  }
+  try {
+    const supabase = createMiddlewareClient({ req, res })
+    const { data: { session } } = await supabase.auth.getSession()
 
-  // Role-based route protection
-  if (session && ROLE_ROUTES[path]) {
-    const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', session.user.id).single()
-    if (profile && !ROLE_ROUTES[path].includes(profile.role)) {
+    if (session && AUTH_ROUTES.some(r => path.startsWith(r))) {
       return NextResponse.redirect(new URL('/dashboard', req.url))
     }
+
+    if (!session && PROTECTED_ROUTES.some(r => path.startsWith(r))) {
+      const loginUrl = new URL('/auth/login', req.url)
+      loginUrl.searchParams.set('next', path)
+      return NextResponse.redirect(loginUrl)
+    }
+
+    if (session && ROLE_ROUTES[path]) {
+      try {
+        const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', session.user.id).single()
+        if (profile && !ROLE_ROUTES[path].includes(profile.role)) {
+          return NextResponse.redirect(new URL('/dashboard', req.url))
+        }
+      } catch {
+        // Ignore profile lookup failures and allow the request to continue.
+      }
+    }
+  } catch {
+    // Gracefully continue when Supabase auth is unavailable.
   }
 
   return res
