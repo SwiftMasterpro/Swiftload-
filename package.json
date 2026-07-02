@@ -1,0 +1,9 @@
+{
+  "name": "swiftload-root",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix extracted/swiftload-prod install --legacy-peer-deps && npm --prefix extracted/swiftload-prod run build",
+    "start": "npm --prefix extracted/swiftload-prod run start",
+    "dev": "npm --prefix extracted/swiftload-prod run dev"
+  }
+}
