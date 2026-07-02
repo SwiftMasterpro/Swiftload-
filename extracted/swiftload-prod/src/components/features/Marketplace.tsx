@@ -34,7 +34,7 @@ export function Marketplace() {
     if (maxWeight) q = q.lte('weight_tons', parseFloat(maxWeight))
     const { data } = await q.limit(40)
     let filtered = data ?? []
-    if (search) filtered = filtered.filter(l => l.title.toLowerCase().includes(search.toLowerCase()) || l.pickup_city.toLowerCase().includes(search.toLowerCase()) || l.dropoff_city.toLowerCase().includes(search.toLowerCase()))
+    if (search) filtered = filtered.filter((l: { title?: string | null; pickup_city?: string | null; dropoff_city?: string | null }) => (l.title ?? '').toLowerCase().includes(search.toLowerCase()) || (l.pickup_city ?? '').toLowerCase().includes(search.toLowerCase()) || (l.dropoff_city ?? '').toLowerCase().includes(search.toLowerCase()))
     setLoads(filtered)
     setLoading(false)
   }

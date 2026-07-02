@@ -13,8 +13,11 @@ export default async function CustomerDashboardPage() {
     supabase.from('bookings').select('*,load:loads(*),driver:profiles(*)').eq('customer_id', profile.id).order('created_at', { ascending:false }).limit(10),
   ])
   const stats = {
-    total_loads: loads?.length ?? 0, active_loads: loads?.filter(l=>['posted','bidding','accepted','in_transit'].includes(l.status)).length ?? 0,
-    completed_loads: loads?.filter(l=>l.status==='delivered').length ?? 0, total_spent: 0, avg_rating_given: 0,
+    total_loads: loads?.length ?? 0,
+    active_loads: loads?.filter((l: { status?: string | null }) => ['posted', 'bidding', 'accepted', 'in_transit'].includes(l.status ?? '')).length ?? 0,
+    completed_loads: loads?.filter((l: { status?: string | null }) => l.status === 'delivered').length ?? 0,
+    total_spent: 0,
+    avg_rating_given: 0,
   }
   return (
     <DashboardLayout role="customer" userName={profile.full_name} avatarUrl={profile.avatar_url}>

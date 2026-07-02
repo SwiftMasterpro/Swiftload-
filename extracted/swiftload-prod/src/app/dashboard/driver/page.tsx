@@ -13,8 +13,13 @@ export default async function DriverDashboardPage() {
     supabase.from('bookings').select('*,load:loads(*)').eq('driver_id', profile.id).order('created_at',{ ascending:false }).limit(20),
   ])
   const stats = {
-    total_trips: bookings?.length??0, active_trips: bookings?.filter(b=>b.status==='in_transit').length??0,
-    completed_trips: bookings?.filter(b=>b.status==='delivered').length??0, total_earned:0, on_time_rate:94, avg_rating:profile.rating??0, acceptance_rate:87,
+    total_trips: bookings?.length ?? 0,
+    active_trips: bookings?.filter((b: { status?: string | null }) => b.status === 'in_transit').length ?? 0,
+    completed_trips: bookings?.filter((b: { status?: string | null }) => b.status === 'delivered').length ?? 0,
+    total_earned: 0,
+    on_time_rate: 94,
+    avg_rating: profile.rating ?? 0,
+    acceptance_rate: 87,
   }
   return (
     <DashboardLayout role="driver" userName={profile.full_name} avatarUrl={profile.avatar_url}>

@@ -10,8 +10,12 @@ export default async function BusinessDashboardPage() {
   if (!profile || !['business','admin'].includes(profile.role)) redirect('/dashboard')
   const { data: loads } = await supabase.from('loads').select('*').eq('poster_id', profile.id).order('created_at',{ ascending:false }).limit(30)
   const stats = {
-    total_loads:loads?.length??0, active_loads:loads?.filter(l=>['posted','bidding','accepted','in_transit'].includes(l.status)).length??0,
-    total_spend:0, avg_cost_per_km:0, preferred_carriers:0, on_time_deliveries:0,
+    total_loads: loads?.length ?? 0,
+    active_loads: loads?.filter((l: { status?: string | null }) => ['posted', 'bidding', 'accepted', 'in_transit'].includes(l.status ?? '')).length ?? 0,
+    total_spend: 0,
+    avg_cost_per_km: 0,
+    preferred_carriers: 0,
+    on_time_deliveries: 0,
   }
   return (
     <DashboardLayout role="business" userName={profile.full_name} avatarUrl={profile.avatar_url}>

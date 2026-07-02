@@ -35,7 +35,7 @@ export function Tracking() {
     if (!booking) return
     const channel = supabase.channel(`tracking:${booking.id}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'tracking_updates', filter: `booking_id=eq.${booking.id}` },
-        payload => setUpdates(u => [payload.new as TrackingUpdate, ...u]))
+        (payload: { new: TrackingUpdate }) => setUpdates(u => [payload.new as TrackingUpdate, ...u]))
       .subscribe()
     return () => { supabase.removeChannel(channel) }
   }, [booking?.id])

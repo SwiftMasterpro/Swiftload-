@@ -42,7 +42,7 @@ export function Messages() {
     load()
     const channel = supabase.channel(`msgs:${selected}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selected}` },
-        payload => { setMessages(m => [...m, payload.new as Message]); setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 30) })
+        (payload: { new: Message }) => { setMessages(m => [...m, payload.new as Message]); setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 30) })
       .subscribe()
     return () => { supabase.removeChannel(channel) }
   }, [selected, session])

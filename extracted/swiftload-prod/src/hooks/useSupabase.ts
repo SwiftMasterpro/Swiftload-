@@ -8,11 +8,11 @@ export function useUser() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(({ data }: { data: { user: User | null } }) => {
       setUser(data.user)
       setLoading(false)
     })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_: string, session: { user: User | null } | null) => {
       setUser(session?.user ?? null)
     })
     return () => subscription.unsubscribe()
@@ -30,7 +30,7 @@ export function useProfile(userId: string | null) {
     if (!userId) return
     setLoading(true)
     supabase.from('profiles').select('*').eq('user_id', userId).single()
-      .then(({ data }) => { setProfile(data); setLoading(false) })
+      .then(({ data }: { data: Record<string, unknown> | null }) => { setProfile(data); setLoading(false) })
   }, [userId])
 
   return { profile, loading }

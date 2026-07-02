@@ -10,8 +10,12 @@ export default async function FleetDashboardPage() {
   if (!profile || !['fleet_owner','admin'].includes(profile.role)) redirect('/dashboard')
   const { data: vehicles } = await supabase.from('vehicles').select('*').eq('owner_id', profile.id).order('created_at',{ ascending:false })
   const stats = {
-    total_vehicles:vehicles?.length??0, active_vehicles:vehicles?.filter(v=>v.status==='active').length??0,
-    maintenance_due:vehicles?.filter(v=>v.status==='maintenance').length??0, total_revenue:0, avg_utilisation:0, drivers_count:0,
+    total_vehicles: vehicles?.length ?? 0,
+    active_vehicles: vehicles?.filter((v: { status?: string | null }) => v.status === 'active').length ?? 0,
+    maintenance_due: vehicles?.filter((v: { status?: string | null }) => v.status === 'maintenance').length ?? 0,
+    total_revenue: 0,
+    avg_utilisation: 0,
+    drivers_count: 0,
   }
   return (
     <DashboardLayout role="fleet_owner" userName={profile.full_name} avatarUrl={profile.avatar_url}>
