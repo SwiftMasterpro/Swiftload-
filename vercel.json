@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": "extracted/swiftload-prod/.next",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
+  "rootDirectory": "extracted/swiftload-prod",
   "regions": ["fra1"]
 }
