@@ -4,5 +4,8 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install --legacy-peer-deps",
   "rootDirectory": "extracted/swiftload-prod",
-  "regions": ["fra1"]
+  "regions": ["fra1"],
+  "github": {
+    "silent": true
+  }
 }
